@@ -1,13 +1,27 @@
-from mpl_toolkits.mplot3d import Axes3D
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import style
+from mpl_toolkits.mplot3d import Axes3D
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection= Axes3D.name)
 
-def make_bar(ax, x0=0, y0=0, width = 0.5, height=1 , cmap="viridis",  
-              norm=matplotlib.colors.Normalize(vmin=0, vmax=1), **kwargs ):
+# Hide background
+ax.xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+ax.yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+ax.zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+
+# customising grid lines
+ax.grid( which='major', axis='both')
+
+# # Hide axes ticks
+# ax.set_xticks([])
+# ax.set_yticks([])
+# ax.set_zticks([])
+
+def make_bar(ax, x0=0, y0=0, width = 0.5, height=1 , cmap = "BrBG",  
+              norm=matplotlib.colors.Normalize(vmin=-1, vmax=1), **kwargs ):
     # Make data
     u = np.linspace(0, 2*np.pi, 4+1)+np.pi/4.
     v_ = np.linspace(np.pi/4., 3./4*np.pi, 100)
@@ -28,7 +42,7 @@ def make_bar(ax, x0=0, y0=0, width = 0.5, height=1 , cmap="viridis",
     #translate
     x += x0; y += y0
     #plot
-    ax.plot_surface(x, y, z, cmap=cmap, norm=norm, **kwargs)
+    ax.plot_surface(x, y, z, cmap=cmap, norm=norm, antialiased=False)
 
 def make_bars(ax, x, y, height, width=1):
     widths = np.array(width)*np.ones_like(x)
@@ -42,8 +56,8 @@ def make_bars(ax, x, y, height, width=1):
         make_bar(ax, x0=x[i], y0=y[i], width = w[i] , height=h[i], norm=norm)
 
 
-X, Y = np.meshgrid([1,2,3], [2,3,4])
-Z = np.sin(X*Y)+1.5
+X, Y = np.meshgrid([1,2,1], [2,3,4])
+Z = np.sin(X*Y) + 1.5
 
 make_bars(ax, X,Y,Z, width=0.2, )
 plt.show()
